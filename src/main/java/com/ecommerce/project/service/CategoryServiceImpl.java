@@ -9,6 +9,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -24,7 +25,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public String addCategory(CategoryModel category) {
-        //categories.add(category);
         categoryRepository.save(category);
         String categoryName = category.getCategoryName();
 
@@ -33,23 +33,19 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public String deleteCategory(Long categoryId) {
-        List<CategoryModel> categories = categoryRepository.findAll();
-        CategoryModel category = categories.stream().filter(cat -> cat.getCategoryId().equals(categoryId)).findFirst().orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category Not Found"));
+        CategoryModel category = categoryRepository.findById(categoryId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category Not Found"));
 
         categoryRepository.delete(category);
         return "Category with categoryId: " + categoryId + " removed successfully";
     }
 
     @Override
-    public String updateCategory(CategoryModel category, Long categoryId) {
-        CategoryModel existingCategory = categories.stream().filter(cat -> cat.getCategoryId().equals(categoryId)).findFirst().orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category Not Found"));
+    public CategoryModel updateCategory(CategoryModel category, Long categoryId) {
+        CategoryModel existingCategory = categoryRepository.findById(categoryId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category Not Found"));
 
-        if (existingCategory != null) {
-            int index = categories.indexOf(existingCategory);
-            categories.set(index, category);
-            return "Category with categoryId: " + category.getCategoryId() + " updated successfully";
-        }
+        category.setCategoryId(existingCategory.getCategoryId());
+        categoryRepository.save(category);
 
-        return null;
+        return existingCategory;
     }
 }

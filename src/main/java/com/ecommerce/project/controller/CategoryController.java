@@ -51,12 +51,8 @@ public class CategoryController {
     }
 
     @PutMapping("/public/categories/{categoryId}")
-    public ResponseEntity<String> updateCategory(@RequestBody CategoryModel category,@PathVariable Long categoryId) {
-        try{
-            String status = categoryService.updateCategory(category, categoryId);
-            return new ResponseEntity<>(status, HttpStatus.OK);
-        }catch (ResponseStatusException e) {
-            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
-        }
+    public ResponseEntity<CategoryModel> updateCategory(@RequestBody CategoryModel category,@PathVariable Long categoryId) {
+        CategoryModel updatedCategory = categoryService.updateCategory(category, categoryId);
+        return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
     }
 }
