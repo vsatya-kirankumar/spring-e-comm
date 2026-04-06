@@ -1,6 +1,5 @@
-package com.ecommerce.project.DTO;
+package com.ecommerce.project.dto;
 
-import com.ecommerce.project.model.CategoryModel;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.List;
@@ -8,14 +7,18 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CategoryResponse {
     private String message;
-    private List<CategoryModel> categories;
+    private List<CategoryDTO> categories;
 
     public CategoryResponse(String message) {
         this.message = message;
     }
 
-    public CategoryResponse(List<CategoryModel> categories) {
+    public CategoryResponse(List<CategoryDTO> categories) {
         this.categories = categories;
+    }
+
+    public CategoryResponse() {
+
     }
 
     public String getMessage() {
@@ -26,11 +29,11 @@ public class CategoryResponse {
         this.message = message;
     }
 
-    public List<CategoryModel> getCategories() {
+    public List<CategoryDTO> getCategories() {
         return categories;
     }
 
-    public void setCategories(List<CategoryModel> categories) {
+    public void setCategories(List<CategoryDTO> categories) {
         this.categories = categories;
     }
 }

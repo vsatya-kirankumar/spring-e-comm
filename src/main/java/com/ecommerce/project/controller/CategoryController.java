@@ -1,6 +1,7 @@
 package com.ecommerce.project.controller;
 
-import com.ecommerce.project.DTO.CategoryResponse;
+import com.ecommerce.project.dto.CategoryDTO;
+import com.ecommerce.project.dto.CategoryResponse;
 import com.ecommerce.project.exception.ValidationSequence;
 import com.ecommerce.project.model.CategoryModel;
 import com.ecommerce.project.service.CategoryService;
@@ -10,9 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -23,7 +21,7 @@ public class CategoryController {
 
     @GetMapping("/public/categories")
     public ResponseEntity<CategoryResponse> getCategories() {
-        CategoryResponse allCategories = categoryService.getCategories();
+        CategoryResponse allCategories = categoryService.getAllCategories();
         return new ResponseEntity<>(allCategories, HttpStatus.OK);
     }
 
