@@ -5,11 +5,11 @@ import com.ecommerce.project.dto.CategoryResponse;
 import com.ecommerce.project.model.CategoryModel;
 
 public interface CategoryService {
-    CategoryResponse getAllCategories();
+    CategoryResponse getAllCategories(Integer pageNumber, Integer pageSize);
 
-    String addCategory(CategoryModel category);
+    CategoryDTO addCategory(CategoryDTO categoryDTO);
 
-    String deleteCategory(Long categoryId);
+    CategoryDTO deleteCategory(Long categoryId);
 
-    CategoryModel updateCategory(CategoryModel category, Long categoryId);
+    CategoryDTO updateCategory(CategoryDTO categoryDTO, Long categoryId);
 }

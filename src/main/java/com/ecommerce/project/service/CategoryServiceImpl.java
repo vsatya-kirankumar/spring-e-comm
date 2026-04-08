@@ -8,6 +8,9 @@ import com.ecommerce.project.model.CategoryModel;
 import com.ecommerce.project.repositories.CategoryRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,44 +24,52 @@ public class CategoryServiceImpl implements CategoryService {
     private ModelMapper modelMapper;
 
     @Override
-    public CategoryResponse getAllCategories() {
-        List<CategoryModel> categories = categoryRepository.findAll();
+    public CategoryResponse getAllCategories(Integer pageNumber, Integer pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<CategoryModel> allCategories = categoryRepository.findAll(pageable);
+
+        List<CategoryModel> categories = allCategories.getContent();
         if (categories.isEmpty())
             throw new APIException("No Categories Found.");
 
         List<CategoryDTO> categoryDTO = categories.stream().map(category -> modelMapper.map(category, CategoryDTO.class)).toList();
         CategoryResponse categoryResponse = new CategoryResponse();
         categoryResponse.setCategories(categoryDTO);
+        categoryResponse.setTotalPages(allCategories.getTotalPages());
+        categoryResponse.setTotalElements(allCategories.getTotalElements());
+        categoryResponse.setPageNumber(allCategories.getNumber());
+        categoryResponse.setPageSize(allCategories.getSize());
 
         return categoryResponse;
     }
 
     @Override
-    public String addCategory(CategoryModel category) {
-        String categoryName = category.getCategoryName();
+    public CategoryDTO addCategory(CategoryDTO categoryDTO) {
+        CategoryModel category = modelMapper.map(categoryDTO, CategoryModel.class);
         CategoryModel existingCategory = categoryRepository.findByCategoryName(category.getCategoryName());
         if (existingCategory != null) {
-            throw new APIException("Category with  name'" + categoryName + "' already exists. Please try with a different name");
+            throw new APIException("Category with name '" + category.getCategoryName() + "' already exists. Please try with a different name");
         }
-        categoryRepository.save(category);
-        return "Category with name: " + categoryName + " added successfully.";
+        CategoryModel savedCategory = categoryRepository.save(category);
+        return modelMapper.map(savedCategory, CategoryDTO.class);
     }
 
     @Override
-    public String deleteCategory(Long categoryId) {
+    public CategoryDTO deleteCategory(Long categoryId) {
         CategoryModel category = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("categoryId", categoryId));
 
         categoryRepository.delete(category);
-        return "Category with categoryId: " + categoryId + " removed successfully";
+        return modelMapper.map(category, CategoryDTO.class);
     }
 
     @Override
-    public CategoryModel updateCategory(CategoryModel category, Long categoryId) {
-        CategoryModel existingCategory = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("CategoryName: " + category.getCategoryName(), "categoryId", categoryId.toString()));
+    public CategoryDTO updateCategory(CategoryDTO categoryDTO, Long categoryId) {
+        CategoryModel categoryModel = modelMapper.map(categoryDTO, CategoryModel.class);
+        CategoryModel existingCategory = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("CategoryName: " + categoryDTO.getCategoryName(), "categoryId", categoryId.toString()));
 
-        category.setCategoryId(existingCategory.getCategoryId());
-        categoryRepository.save(category);
+        categoryModel.setCategoryId(existingCategory.getCategoryId());
+        categoryRepository.save(categoryModel);
 
-        return existingCategory;
+        return modelMapper.map(categoryModel, CategoryDTO.class);
     }
 }
