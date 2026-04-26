@@ -1,14 +1,12 @@
 package com.ecommerce.project.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class ProductResponse {
     private List<ProductDTO> products;
 }
