@@ -2,7 +2,6 @@ package com.ecommerce.project.service;
 
 import com.ecommerce.project.dto.ProductDTO;
 import com.ecommerce.project.dto.ProductResponse;
-import com.ecommerce.project.model.Product;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
