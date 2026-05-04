@@ -51,7 +51,7 @@ public class SecurityDemoController {
         Authentication authentication;
         try {
             authentication =
-                    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUserName(),
+                    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
                             loginRequest.getPassword()));
         } catch (AuthenticationException e) {
             Map<String, Object> map = new HashMap<>();
