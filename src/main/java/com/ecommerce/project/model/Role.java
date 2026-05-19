@@ -3,6 +3,7 @@ package com.ecommerce.project.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "roles")
@@ -14,6 +15,7 @@ public class Role {
     @Column(name = "role_id")
     private Integer roleId;
 
+    @ToString.Exclude
     @Column(name = "role_name", length = 10)
     @Enumerated(EnumType.STRING)
     private AppRole roleName;
