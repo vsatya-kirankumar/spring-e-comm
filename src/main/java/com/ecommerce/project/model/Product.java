@@ -1,24 +1,25 @@
 package com.ecommerce.project.model;
 
+import com.ecommerce.project.model.CartItem;
+import com.ecommerce.project.model.Category;
+import com.ecommerce.project.model.UserInfo;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "products")
 @ToString
 public class Product {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long productId;
@@ -45,6 +46,12 @@ public class Product {
     @JoinColumn(name = "seller_id")
     private UserInfo user;
 
-    @OneToMany(mappedBy = "product", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
-    private List<CartItem> products = new ArrayList<>();
+    @OneToMany(
+            mappedBy = "product",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<CartItem> cartItems = new ArrayList<>();
 }
